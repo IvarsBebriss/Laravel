@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UsersRequest;
+use App\Post;
+use App\User;
+use App\Role;
 use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller
@@ -13,7 +17,8 @@ class AdminUsersController extends Controller
      */
     public function index()
     {
-        return view('admin.users.index');
+        $users = User::all();
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -23,7 +28,8 @@ class AdminUsersController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $roles = Role::all('id', 'name')->sortBy('name');
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -32,9 +38,28 @@ class AdminUsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UsersRequest $request)
     {
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role_id = $request->role_id;
+        $user->status = $request->status;
+        $user->password = bcrypt($request->password);
+        $user->save();
 
+        if ($file = $request->file('fileToUpload')) {
+            $name = $file->getClientOriginalName();
+            $filename = pathinfo($name, PATHINFO_FILENAME);
+            $ext = $file->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$ext;
+            $file->move('images',$fileNameToStore);
+
+            $user->photos()->create(['path'=>$fileNameToStore]);
+
+        };
+
+        return redirect('admin\users');
     }
 
     /**

@@ -15,7 +15,7 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
 
 mix.styles([
-    'resources/assets/css/libs/bootstrap.min.css',
+    'resources/assets/css/libs/bootstrap.css',
     'resources/assets/css/libs/blog-post.css',
     'resources/assets/css/libs/font-awesome.css',
     'resources/assets/css/libs/metisMenu.css',
