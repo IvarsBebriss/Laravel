@@ -24,9 +24,9 @@ class UsersRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|unique:users|min:2',
-            'email'=>'required|unique:users',
-            'password'=>'required|min:8',
+            'name'=>'required|min:2|unique:users,name,'.($this->user ?? 0),
+            'email'=>'required|unique:users,email,'.($this->user ?? 0),
+            'password'=>'min:8|required_if:'.$this->user.','.'NULL',
             'role_id'=>'required',
             'status'=>'required',
             'fileToUpload'=>'file|image|max:1000000',

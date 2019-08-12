@@ -6,7 +6,9 @@ use App\Http\Requests\UsersRequest;
 use App\Post;
 use App\User;
 use App\Role;
-use Illuminate\Http\Request;
+//use Illuminate\Http\File;
+use Illuminate\Support\Facades\File;
+//use Illuminate\Support\Facades\Storage;
 
 class AdminUsersController extends Controller
 {
@@ -40,6 +42,9 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
+        $error = $request->validate([
+            'email' => 'unique:users'
+        ]);
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -83,7 +88,7 @@ class AdminUsersController extends Controller
     {
         $user = User::findOrFail($id);
         $roles = Role::all('id', 'name');
-        return view('admin.users.edit', compact('user'),compact('roles'));
+        return view('admin.users.edit', compact('user','roles'));
     }
 
     /**
@@ -93,9 +98,41 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsersRequest $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+        //$path = $user->photos->count()>0 ? $user->photos()->first()->path : NULL;
+
+        if ($file = $request->file('fileToUpload')) {
+            $name = $file->getClientOriginalName();
+            $filename = pathinfo($name, PATHINFO_FILENAME);
+            $ext = $file->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$ext;
+            $file->move('images',$fileNameToStore);
+
+            $path = $user->photos->count()>0 ? $user->photos()->first()->path : NULL;
+            $path = ltrim($path, '/');
+
+            if(File::exists($path)){
+                File::delete($path);
+            };
+
+            $user->photos()->delete();
+            $user->photos()->create(['path'=>$fileNameToStore]);
+
+        };
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role_id = $request->role_id;
+        $user->status = $request->status;
+        if($request->password){
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+
+        return redirect('/admin/users')->with('success', 'User '.$user->name.' updated'.$path);
+
     }
 
     /**

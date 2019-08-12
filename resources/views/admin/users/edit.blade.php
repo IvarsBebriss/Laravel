@@ -1,13 +1,16 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1>Edit User</h1>
+<h1>Edit User</h1>
+<div class="col-sm-3">
+    <img class="img-responsive img-circle" src="{{($user->photos->count() > 0) ? $user->photos->first()->path : '\images\noimage.png'}}" height="50px" alt="IMAGE">
+</div>
+<div class="col-sm-9">
     <form method="post" action="{{route('users.update',$user->id)}}" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
         @include('errors')
         <div class="form-group">
-
             <label for="name">Name</label>
             <input type="text" name="name" class="form-control" value="{{$user->name}}">
 
@@ -34,15 +37,13 @@
             <br>
             <input type="submit" class="btn btn-primary" name="submit" value="Update User">
         </div>
-
     </form>
-
     <form action="{{ route('users.destroy', $user->id)}}" method="post">
         @csrf
         @method('DELETE')
         <input type="submit" class="btn btn-danger" name="delete" value="DELETE USER">
     </form>
-
+</div>
 @endsection
 
 @section('footer')
