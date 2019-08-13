@@ -3,7 +3,7 @@
 @section('content')
 <h1>Edit User</h1>
 <div class="col-sm-3">
-    <img class="img-responsive img-circle" src="{{($user->photos->count() > 0) ? $user->photos->first()->path : '\images\noimage.png'}}" height="50px" alt="IMAGE">
+    <img class="img-responsive img-circle" src="{{($user->photo->count() > 0) ? $user->photo->first()->path : '\images\noimage.png'}}" height="50px" alt="IMAGE">
 </div>
 <div class="col-sm-9">
     <form method="post" action="{{route('users.update',$user->id)}}" enctype="multipart/form-data">
@@ -33,15 +33,16 @@
             <label for="fileToUpload">Profile image:</label>
             <input type="file" class="form-control-file" name="fileToUpload">
 
-            <label for="password">Password reset disabled</label>
+            <label for="password">Password</label>
+            <input type="password" name="password" class="form-control" value="12345678">
             <br>
-            <input type="submit" class="btn btn-primary" name="submit" value="Update User">
         </div>
+        <button type="submit" class="btn btn-success pull-left" name="submit">Update User</button>
     </form>
     <form action="{{ route('users.destroy', $user->id)}}" method="post">
         @csrf
         @method('DELETE')
-        <input type="submit" class="btn btn-danger" name="delete" value="DELETE USER">
+        <button type="submit" class="btn btn-danger pull-right" name="delete">Delete User</button>
     </form>
 </div>
 @endsection

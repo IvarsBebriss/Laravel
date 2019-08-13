@@ -43,8 +43,19 @@ class User extends Authenticatable
 
     }
 
-    public function photos(){
+    public function photo(){
         return $this->morphMany('App\Photo', 'imageable');
+    }
+
+    public function isAdmin(){
+        if($this->role->name == 'administrator' && $this->status == 1){
+            return true;
+        }
+        return false;
+    }
+
+    public function post(){
+        return $this->hasMany('App\Post');
     }
 
 }

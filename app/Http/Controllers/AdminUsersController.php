@@ -7,6 +7,7 @@ use App\Post;
 use App\User;
 use App\Role;
 //use Illuminate\Http\File;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 //use Illuminate\Support\Facades\Storage;
 
@@ -42,9 +43,6 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
-        $error = $request->validate([
-            'email' => 'unique:users'
-        ]);
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -60,7 +58,7 @@ class AdminUsersController extends Controller
             $fileNameToStore = $filename.'_'.time().'.'.$ext;
             $file->move('images',$fileNameToStore);
 
-            $user->photos()->create(['path'=>$fileNameToStore]);
+            $user->photo()->create(['path'=>$fileNameToStore]);
 
         };
 
@@ -101,7 +99,6 @@ class AdminUsersController extends Controller
     public function update(UsersRequest $request, $id)
     {
         $user = User::findOrFail($id);
-        //$path = $user->photos->count()>0 ? $user->photos()->first()->path : NULL;
 
         if ($file = $request->file('fileToUpload')) {
             $name = $file->getClientOriginalName();
@@ -110,15 +107,13 @@ class AdminUsersController extends Controller
             $fileNameToStore = $filename.'_'.time().'.'.$ext;
             $file->move('images',$fileNameToStore);
 
-            $path = $user->photos->count()>0 ? $user->photos()->first()->path : NULL;
-            $path = ltrim($path, '/');
+            //delete old image and record in photos
+            if(count($user->photo)>0){
+                unlink(public_path().$user->photo->first()->path);
+                $user->photo()->delete();
+            }
 
-            if(File::exists($path)){
-                File::delete($path);
-            };
-
-            $user->photos()->delete();
-            $user->photos()->create(['path'=>$fileNameToStore]);
+            $user->photo()->create(['path'=>$fileNameToStore]);
 
         };
 
@@ -126,12 +121,12 @@ class AdminUsersController extends Controller
         $user->email = $request->email;
         $user->role_id = $request->role_id;
         $user->status = $request->status;
-        if($request->password){
+        if($request->password != '12345678'){
             $user->password = bcrypt($request->password);
         }
         $user->save();
 
-        return redirect('/admin/users')->with('success', 'User '.$user->name.' updated'.$path);
+        return redirect('/admin/users')->with('success', 'User '.$user->name.' updated');
 
     }
 
@@ -143,6 +138,20 @@ class AdminUsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(Auth::user()->id == $id){
+            return redirect('/admin/users/'.$id.'/edit')->with('error','You can not delete yourself!');
+        }
+
+        $user = User::findOrFail($id);
+
+        //delete user photo and photos entry
+        if(count($user->photo)>0){
+            unlink(public_path().$user->photo->first()->path);
+            $user->photo()->delete();
+        }
+
+        $user->delete();
+
+        return redirect('/admin/users')->with('success', 'User deleted');
     }
 }

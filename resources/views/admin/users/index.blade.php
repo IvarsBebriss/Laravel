@@ -4,7 +4,8 @@
 
 <h1>Users</h1>
 @include('errors')
-<table class="table table-striped">
+@if (isset($users))
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Photo</th>
@@ -18,22 +19,21 @@
         </tr>
     </thead>
     <tbody>
-        @if (isset($users))
-            @foreach($users as $user)
-            <tr>
-                <td><img width="50px" src="{{($user->photos->count() > 0) ? $user->photos->first()->path : '\images\noimage.png'}}" alt="IMAGE"></td>
-                <td>{{$user->name}}</td>
-                <td>{{$user->email}}</td>
-                <td>{{$user->role->name}}</td>
-                <td>{{$user->status ? "Active":"Inactive"}}</td>
-                <td>{{$user->created_at->diffForHumans()}}</td>
-                <td>{{$user->updated_at->diffForHumans()}}</td>
-                <td><a href="{{route('users.edit',$user->id)}}" class="btn btn-primary btn-xs">Edit</a></td>
-            </tr>
-            @endforeach
-        @endif
+        @foreach($users as $user)
+        <tr>
+            <td><img width="50px" src="{{($user->photo->count() > 0) ? $user->photo->first()->path : '\images\noimage.png'}}" alt="IMAGE"></td>
+            <td>{{$user->name}}</td>
+            <td>{{$user->email}}</td>
+            <td>{{$user->role->name}}</td>
+            <td>{{$user->status ? "Active":"Inactive"}}</td>
+            <td>{{$user->created_at->diffForHumans()}}</td>
+            <td>{{$user->updated_at->diffForHumans()}}</td>
+            <td><a href="{{route('users.edit',$user->id)}}" class="btn btn-primary btn-xs">Edit</a></td>
+        </tr>
+        @endforeach
     </tbody>
 </table>
+@endif
 
 
 
