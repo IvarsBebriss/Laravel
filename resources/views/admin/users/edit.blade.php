@@ -1,7 +1,16 @@
 @extends('layouts.admin')
 
 @section('content')
-<h1>Edit User</h1>
+<div class="card">
+    <div class="card-header">
+        <h1 class="left">Edit user
+            <div class="pull-right">
+                <a href="{{route('users.index')}}" class="btn btn-info btn-sm">Go back</a>
+            </div>
+        </h1>
+    </div>
+</div>
+<hr>
 <div class="col-sm-3">
     <img class="img-responsive img-circle" src="{{($user->photo->count() > 0) ? $user->photo->first()->path : '\images\noimage.png'}}" height="50px" alt="IMAGE">
 </div>

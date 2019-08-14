@@ -11,4 +11,8 @@ class Category extends Model
     public function post(){
         return $this->hasMany('App\Post');
     }
+
+    public function getPostCountAttribute(){
+        return $this->post()->count();
+    }
 }

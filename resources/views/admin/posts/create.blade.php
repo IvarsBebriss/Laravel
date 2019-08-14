@@ -1,7 +1,17 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1>Create Post</h1>
+    <div class="card">
+        <div class="card-header">
+            <h1 class="left">
+                Create a post
+                <div class="pull-right">
+                    <a href="{{route('posts.index')}}" class="btn btn-info btn-sm">Go back</a>
+                </div>
+            </h1>
+        </div>
+    </div>
+    <hr>
     <form method="post" action="{{route('posts.store')}}" enctype="multipart/form-data">
         @csrf
         @include('errors')

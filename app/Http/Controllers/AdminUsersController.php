@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersRequest;
-use App\Post;
 use App\User;
 use App\Role;
 //use Illuminate\Http\File;
@@ -144,11 +143,12 @@ class AdminUsersController extends Controller
 
         $user = User::findOrFail($id);
 
+        //use the code below when using hard delete on user
         //delete user photo and photos entry
-        if(count($user->photo)>0){
-            unlink(public_path().$user->photo->first()->path);
-            $user->photo()->delete();
-        }
+//        if(count($user->photo)>0){
+//            unlink(public_path().$user->photo->first()->path);
+//            $user->photo()->delete();
+//        }
 
         $user->delete();
 
