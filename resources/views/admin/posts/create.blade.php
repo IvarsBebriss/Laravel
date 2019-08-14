@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1 class="left">
+            <h1>
                 Create a post
                 <div class="pull-right">
                     <a href="{{route('posts.index')}}" class="btn btn-info btn-sm">Go back</a>

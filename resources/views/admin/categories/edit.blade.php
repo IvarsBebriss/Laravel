@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1 class="left">
+            <h1>
                 Edit category
                 <div class="pull-right">
                     <a href="{{route('categories.index')}}" class="btn btn-info btn-sm">Go back</a>
@@ -12,6 +12,7 @@
         </div>
     </div>
     <hr>
+    <div class="col-sm-6">
     <form method="post" action="{{route('categories.update', $category->id)}}" >
         @csrf
         @method('put')
@@ -28,4 +29,5 @@
         @method('DELETE')
         <button type="submit" class="btn btn-danger pull-right" name="delete" onclick="return confirm('Are you sure you want to delete this category?');">Delete Category</button>
     </form>
+    </div>
 @endsection

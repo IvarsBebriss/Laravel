@@ -94,10 +94,11 @@ class AdminCategoriesController extends Controller
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
-        if ($category->posts){
-            return redirect(route('categories.index'))->with('error','Category with posts may not be deleted');
-        } else {
-
+        if ($category->post()->count()){
+            return redirect(route('categories.index'))->with('error','Category with posts may not be deleted!');
         }
+
+        $category->delete();
+        return redirect(route('categories.index'))->with('success','Category deleted!');
     }
 }

@@ -1,7 +1,12 @@
 @extends('layouts.admin')
 
 @section('content')
-
+    <div class="card">
+        <div class="card-header">
+            <h1>Posts</h1>
+        </div>
+    </div>
+    <hr>
 @include('errors')
 @if (isset($posts))
     <table class="table table-striped table-hover">

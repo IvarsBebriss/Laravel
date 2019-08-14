@@ -3,7 +3,8 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h1 class="left">Edit user
+        <h1>
+            Edit user
             <div class="pull-right">
                 <a href="{{route('users.index')}}" class="btn btn-info btn-sm">Go back</a>
             </div>

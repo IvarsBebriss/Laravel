@@ -1,8 +1,12 @@
 @extends('layouts.admin')
 
 @section('content')
-
-<h1>Categories</h1>
+<div class="card">
+    <div class="card-header">
+        <h1>Categories</h1>
+    </div>
+</div>
+<hr>
 @include('errors')
 
 <div class="row">

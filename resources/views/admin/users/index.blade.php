@@ -1,8 +1,12 @@
 @extends('layouts.admin')
 
 @section('content')
-
-<h1>Users</h1>
+<div class="card">
+    <div class="card-header">
+        <h1>Users</h1>
+    </div>
+</div>
+<hr>
 @include('errors')
 @if (isset($users))
 <table class="table table-striped table-hover">
