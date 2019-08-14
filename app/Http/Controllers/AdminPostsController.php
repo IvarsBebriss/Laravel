@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Http\Requests\PostRequest;
 use App\Post;
 use App\User;
@@ -28,7 +29,8 @@ class AdminPostsController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all()->sortBy('name');
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -66,7 +68,7 @@ class AdminPostsController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -77,7 +79,9 @@ class AdminPostsController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.posts.edit');
+        $post = Post::findOrFail($id);
+        $categories = Category::all()->sortBy('name');
+        return view('admin.posts.edit', compact('post'),compact('categories'));
     }
 
     /**
@@ -87,9 +91,34 @@ class AdminPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        if($post->user_id != Auth::user()->id){
+            return redirect('admin\posts')->with('error','You may not edit this post');
+        }
+        $post->title = $request->title;
+        $post->category_id = $request->category_id;
+        $post->body = $request->body;
+        $post->save();
+
+        if ($file = $request->file('fileToUpload')) {
+            $name = $file->getClientOriginalName();
+            $filename = pathinfo($name, PATHINFO_FILENAME);
+            $ext = $file->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$ext;
+            $file->move('images',$fileNameToStore);
+
+            //delete old image and record in photos
+            if(count($post->photo)>0){
+                unlink(public_path().$post->photo->first()->path);
+                $post->photo()->delete();
+            }
+
+            $post->photo()->create(['path'=>$fileNameToStore]);
+        };
+
+        return redirect('admin\posts')->with('success','Post updated');
     }
 
     /**
@@ -100,6 +129,20 @@ class AdminPostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        if($post->user_id != Auth::user()->id){
+            return redirect('admin\posts')->with('error','You may not delete this post');
+        }
+
+        //delete post photo and photos entry
+        if(count($post->photo)>0){
+            unlink(public_path().$post->photo->first()->path);
+            $post->photo()->delete();
+        }
+
+        $post->delete();
+
+        return redirect('/admin/posts')->with('success', 'Post deleted');
+
     }
 }

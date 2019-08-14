@@ -11,7 +11,12 @@
             <input type="text" name="title" class="form-control" placeholder="Enter Title">
 
             <label for="category_id">Category</label>
-            <input type="text" name="category_id" class="form-control" value="1">
+            <select class="form-control" name="category_id" id="category_id">
+                <option default>Please choose...</option>
+                @foreach($categories as $category)
+                    <option value="{{$category->id}}">{{$category->name}}</option>
+                @endforeach
+            </select>
 
             <label for="body">Description</label>
             <textarea rows="4" name="body" class="form-control" placeholder="Your post goes here"></textarea>

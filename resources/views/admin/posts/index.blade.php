@@ -24,7 +24,7 @@
                 <td>{{$post->user->name}}</td>
                 <td>{{$post->title}}</td>
                 <td>{{strlen($post->body)>100 ? substr($post->body,0,100).'...' : $post->body}}</td>
-                <td>{{$post->category_id}}</td>
+                <td>{{$post->category->name}}</td>
                 <td>{{$post->created_at->diffForHumans()}}</td>
                 <td>{{$post->updated_at->diffForHumans()}}</td>
                 <td><a href="{{route('posts.edit',$post->id)}}" class="btn btn-primary btn-xs">Edit</a></td>

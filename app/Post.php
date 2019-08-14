@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     protected $fillable = [
-      'user_id', 'category_id', 'title', 'body'
+        'user_id',
+        'category_id',
+        'title',
+        'body'
     ];
 
     public function user(){
@@ -17,4 +20,9 @@ class Post extends Model
     public function photo(){
         return $this->morphMany('App\Photo', 'imageable');
     }
+
+    public function category(){
+        return $this->belongsTo('App\Category');
+    }
+
 }
