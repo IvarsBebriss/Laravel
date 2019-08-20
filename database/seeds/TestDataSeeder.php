@@ -128,7 +128,7 @@ class TestDataSeeder extends Seeder
 
         DB::table('photos')->insert([
             'path'=>'Bilde__1565769912.jpg',
-            'imageable_id'=>1,
+            'imageable_id'=>3,
             'imageable_type'=>'App\Post',
             'created_at'=>Carbon::now(),
             'updated_at'=>Carbon::now()
@@ -136,7 +136,7 @@ class TestDataSeeder extends Seeder
 
         DB::table('photos')->insert([
             'path'=>'IMG_1447_1565785246.JPG',
-            'imageable_id'=>1,
+            'imageable_id'=>2,
             'imageable_type'=>'App\Post',
             'created_at'=>Carbon::now(),
             'updated_at'=>Carbon::now()
